@@ -1,5 +1,180 @@
 # Mini-Scan
 
+## Problem 
+
+- Horizonatally-scalable application that saves messages from Pub/Sub into sqlite database. 
+- at-least-once semantics
+- handles out-of-order messages 
+
+## Solution
+
+1. Received messages are accumulated and written/processed in a batches.
+2. Failed to be inserted message 
+3. Out-of-order messages are ingnored using sqlite sql ON CONFlICT clause 
+
+## Running
+
+`docker compose up`
+Scan processor service configuration is in `docker-compose.yml`, configurable values:
+- BATCH_SIZE, int
+- TEST_ORDER, string, if set it will create entry with the TEST_ORDER value as ip and `math.MaxUint32` as timestamp, and substitute the . It will also print top 20 entries from the table ordered by timestamp desc
+
+
+## Original Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
+Hello!
+
+As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.
+
+---
+
+The `docker-compose.yml` file sets up a toy example of a scanner. It spins up a Google Pub/Sub emulator, creates a topic and subscription, and publishes scan results to the topic. It can be run via `docker compose up`.
+
+Your job is to build the data processing side. It should:
+
+1. Pull scan results from the subscription `scan-sub`.
+2. Maintain an up-to-date record of each unique `(ip, port, service)`. This should contain when the service was last scanned and a string containing the service's response.
+
+> **_NOTE_**
+
+## Task Definition
+
 Hello!
 
 As you've heard by now, Censys scans the internet at an incredible scale. Processing the results necessitates scaling horizontally across thousands of machines. One key aspect of our architecture is the use of distributed queues to pass data between machines.

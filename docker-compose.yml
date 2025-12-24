@@ -7,6 +7,7 @@ services:
     ports:
       - "8085:8085"
     entrypoint: gcloud beta emulators pubsub start --project test-project --host-port 0.0.0.0:8085
+    attach: false
     healthcheck:
       test: ["CMD", "curl", "-f", "http://pubsub:8085"]
       interval: 5s
@@ -49,7 +50,10 @@ services:
     environment:
       PUBSUB_EMULATOR_HOST: pubsub:8085
       PUBSUB_PROJECT_ID: test-project
-      BATCH_SIZE: 500
+      BATCH_SIZE: 10
+      TEST_ORDER: 1.1.1.10
     build:
       context: .
       dockerfile: ./cmd/scan-processor/Dockerfile
+    volumes:
+      - ./tmp:/database

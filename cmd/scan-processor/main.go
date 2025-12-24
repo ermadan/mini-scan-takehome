@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 
 	"log"
+	"math"
 	"os"
 	"os/signal"
 	"strconv"
@@ -28,11 +29,28 @@ func main() {
 		log.Fatalf("Failed to read batch size: %v", err)
 	}
 
-	db, err := database.NewDatabase("./scans.db")
+	db, err := database.NewDatabase("/database/scans.db")
 	if err != nil {
 		log.Fatalf("Failed to open database: %v", err)
 	}
 	defer db.Close()
+
+	// testing code, see README
+	testingIp := os.Getenv("TEST_ORDER")
+	if testingIp != "" {
+		scan := scanning.Scan{
+			Ip:          testingIp,
+			Port:        8080,
+			Service:     "HTTP",
+			Timestamp:   math.MaxUint32,
+			DataVersion: scanning.V2,
+			Data:        &scanning.V2Data{ResponseStr: "TESTTEST"},
+		}
+		db.StartBatch()
+		db.WriteScan(&scan)
+		db.FinishBatch()
+		log.Printf("Testing ip configured, %s", testingIp)
+	}
 
 	flush := func(messages []*pubsub.Message) error {
 		start := time.Now()
@@ -45,6 +63,14 @@ func main() {
 				log.Printf("Failed to unmarshal message: %v", err)
 				//TODO: add to dead letter queue
 			} else {
+				// testing code, see README
+				if testingIp != "" {
+					if testingIp == scan.Ip {
+						scan.Port = 8080
+						scan.Service = "HTTP"
+						log.Printf("!!!!!!!!Attempt to update testing ip: %v", scan)
+					}
+				}
 				if err := db.WriteScan(&scan); err != nil {
 					return err
 				}
@@ -71,20 +97,27 @@ func main() {
 
 	go func() {
 		err = sub.Receive(ctx, func(ctx context.Context, msg *pubsub.Message) {
+			// The actual message processing (unmarshalling) is heppening during the batch processing.
+			// It can be moved out but will require additional memory to keep unmarshalled scans as long as
+			// messages for ack/nack after batch processing
+			// The batch processing is wrapped in lock to avoid race condition when pubsub is
+			// ivoking the callback, making application songle-threaded, this is again - payoff for
+			// not having memory doubled.
 			mutex.Lock()
 			messages = append(messages, msg)
-			// issue with this approach is that with delayed message previous will be waiting for the batch to fill
-			// adding time-triggered flushed would be a best solution but it will require mutex sync for the messages
-			// slice and may reduce overall performance
+			// The issue with this approach is that with delayed message previous will be waiting for the batch to fill up.
+			// Adding time-triggered flushes will solve this problem
 			if len(messages) >= batchSize {
 				if err := flush(messages); err != nil {
 					log.Fatal("Flushing failed", err)
+					// TODO: add circuit breaker for continous flush failures
 					for _, msg := range messages {
 						msg.Nack()
 					}
-				}
-				for _, msg := range messages {
-					msg.Ack()
+				} else {
+					for _, msg := range messages {
+						msg.Ack()
+					}
 				}
 				messages = messages[:0]
 			}
@@ -104,5 +137,9 @@ func main() {
 	flush(messages)
 	if err != nil {
 		log.Fatalf("Failed to flush: %v", err)
+	}
+	// testing code, see README
+	if testingIp != "" {
+		db.PrintAllScans()
 	}
 }

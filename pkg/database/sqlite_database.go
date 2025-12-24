@@ -24,13 +24,13 @@ func NewDatabase(dataSourceName string) (Database, error) {
 
 	sqlStmt := `
 	create table if not exists scans (
-		id integer not null primary key,
 		ip text,
 		port integer,
 		service text,
 		timestamp integer,
 		data_version integer,
-		response text
+		response text,
+		PRIMARY KEY (ip, port, service)
 	);
 	`
 	_, err = db.Exec(sqlStmt)
@@ -48,7 +48,14 @@ func (d *SQLiteDatabase) StartBatch() error {
 		return err
 	}
 
-	d.stmt, err = d.tx.Prepare("insert into scans(ip, port, service, timestamp, data_version, response) values(?, ?, ?, ?, ?, ?)")
+	d.stmt, err = d.tx.Prepare(`insert into scans(ip, port, service, timestamp, data_version, response) 
+		values(?, ?, ?, ?, ?, ?)
+		on conflict(ip, port, service) do 
+		update set
+			timestamp  = excluded.timestamp,
+			response    = excluded.response,
+			data_version = excluded.data_version
+		where excluded.timestamp > scans.timestamp;		`)
 	return err
 }
 
@@ -73,7 +80,7 @@ func (d *SQLiteDatabase) Close() {
 }
 
 func (d *SQLiteDatabase) PrintAllScans() {
-	rows, err := d.db.Query("SELECT ip, port, service, timestamp, data_version, response FROM scans ORDER BY timestamp ASC")
+	rows, err := d.db.Query("SELECT ip, port, service, timestamp, data_version, response FROM scans ORDER BY timestamp DESC limit 20")
 	if err != nil {
 		log.Fatalf("Failed to query scans: %v", err)
 	}
