@@ -51,7 +51,7 @@ services:
       PUBSUB_EMULATOR_HOST: pubsub:8085
       PUBSUB_PROJECT_ID: test-project
       BATCH_SIZE: 10
-      # TEST_ORDER: 1.1.1.10
+      # TEST_ORDER_IP: 1.1.1.10
     build:
       context: .
       dockerfile: ./cmd/scan-processor/Dockerfile

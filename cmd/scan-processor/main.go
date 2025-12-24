@@ -36,7 +36,7 @@ func main() {
 	defer db.Close()
 
 	// testing code, see README
-	testingIp := os.Getenv("TEST_ORDER")
+	testingIp := os.Getenv("TEST_ORDER_IP")
 	if testingIp != "" {
 		scan := scanning.Scan{
 			Ip:          testingIp,
@@ -103,6 +103,7 @@ func main() {
 			// The batch processing is wrapped in lock to avoid race condition when pubsub is
 			// ivoking the callback, making application songle-threaded, this is again - payoff for
 			// not having memory doubled.
+			//
 			mutex.Lock()
 			messages = append(messages, msg)
 			// The issue with this approach is that with delayed message previous will be waiting for the batch to fill up.
@@ -134,7 +135,10 @@ func main() {
 
 	log.Println("Termination signal received, shutting down gracefully...")
 	cancel() // Cancel the context to stop receiving messages
-	flush(messages)
+
+	mutex.Lock()
+	err = flush(messages)
+	mutex.Unlock()
 	if err != nil {
 		log.Fatalf("Failed to flush: %v", err)
 	}

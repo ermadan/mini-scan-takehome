@@ -17,7 +17,7 @@
 `docker compose up`
 Scan processor service configuration is in `docker-compose.yml`, configurable values:
 - BATCH_SIZE, int
-- TEST_ORDER, string, if set it will create entry with the TEST_ORDER value as ip and `math.MaxUint32` as timestamp, and substitute the . It will also print top 20 entries from the table ordered by timestamp desc
+- TEST_ORDER_IP, string, if set it will create entry with the TEST_ORDER value as ip and `math.MaxUint32` as timestamp, and substitute a random service with `HTTP`. It will also print top 20 entries from the table ordered by timestamp desc
 
 
 ## Task Definition
